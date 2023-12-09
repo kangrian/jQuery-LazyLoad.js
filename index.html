@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="jquery.min.js" type="text/javascript" async></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lazyload.js</title>
+</head>
+<body>
+    <img data-src=""/>
+    <div data-bg=""></div>
+    <script type="text/javascript">
+        window.onload = function() {
+          lazyload(); // caller
+        }
+        function lazyload() {
+
+            $('[data-bg]').each(function() {
+                var $this = $(this);
+                var url = $this.attr('data-bg');
+                $this.css('background-image', 'url(' + url + ')').removeAttr('data-bg');
+            });
+
+            $('[data-src]').each(function() {
+
+                var $this = $(this);
+
+                var window_height = $(window).height();
+                var scroll_top = $(window).scrollTop();
+                var window_bottom = scroll_top + window_height;
+
+                var $this_top = $this.offset().top;
+
+                $this.attr('data-offset-top', $this_top);
+
+                var url = $this.attr('data-src');
+                var tag_name = $this.prop('tagName').toLowerCase();
+                if ($this_top <= window_bottom) {
+                    if (tag_name == 'img') {
+                        $this.attr('src', url).removeAttr('data-src').closest('.placeholder').removeClass('placeholder');
+                    } else if (tag_name == 'iframe') {
+                        $this.attr('src', url).removeAttr('data-src').closest('.placeholder').removeClass('placeholder');
+                    }
+                }
+
+            });
+
+            $(window).on('scroll', function() {
+
+                var window_height = $(window).height();
+                var scroll_top = $(window).scrollTop();
+                var window_bottom = scroll_top + window_height;
+
+                $('[data-src]').each(function() {
+                    var $this = $(this);
+                    var window_height = $(window).height();
+                    var $this_top = $this.offset().top;
+
+                    var url = $this.attr('data-src');
+                    var tag_name = $this.prop('tagName').toLowerCase();
+                    if ($this_top <= window_bottom) {
+                        if (tag_name == 'img') {
+                            $this.attr('src', url).removeAttr('data-src').closest('.placeholder').removeClass('placeholder');
+                        } else if (tag_name == 'iframe') {
+                            $this.attr('src', url).removeAttr('data-src').closest('.placeholder').removeClass('placeholder');
+                        }
+                    }
+                });
+
+            });
+
+        }
+    </script>
+</body>
+</html>
